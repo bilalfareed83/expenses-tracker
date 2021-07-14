@@ -1,12 +1,13 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Child from "./Child";
+import { TransationProvider } from "./transationContext";
 
 function App() {
   return (
-    <div className="App">
+    <TransationProvider>
       <Child />
-    </div>
+    </TransationProvider>
   );
 }
 
