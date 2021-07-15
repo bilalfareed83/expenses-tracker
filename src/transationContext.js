@@ -14,6 +14,7 @@ export const TransationProvider = ({ children }) => {
       payload: {
         amount: obj.amount,
         des: obj.des,
+        id: new Date().getTime().toString(),
       },
     });
   }

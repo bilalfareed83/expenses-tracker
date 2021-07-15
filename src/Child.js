@@ -2,7 +2,7 @@ import react, { useContext, useState } from "react";
 import { TransationContext } from "./transationContext";
 function Child() {
   const { transations, addTransation } = useContext(TransationContext);
-  const [newAmount, setAmount] = useState();
+  const [newAmount, setAmount] = useState(0);
   const [newDes, setDes] = useState("");
 
   const handleAddition = (event) => {
@@ -12,22 +12,32 @@ function Child() {
       amount: newAmount,
       des: newDes,
     });
-    return setAmount(), setDes("");
+    return setAmount(0), setDes("");
   };
+
+  const amount = transations.map((item) => Number(item.amount));
+  const incomeItem = amount
+    .filter((item) => item > 0)
+    .reduce((totalItem, cur) => (totalItem += cur), 0);
+  const expItem = amount
+    .filter((item) => Number(item) < 0)
+    .reduce((totalItem, cur) => (totalItem += cur), 0);
+  const total = amount.reduce((totalItem, cur) => (totalItem += cur), 0);
 
   return (
     <div className="container">
+      {console.log(incomeItem)}
       <h2 className="text-center">Expenses tracker</h2>
       <h2>
-        Your Balance <br /> $200
+        Your Balance <br /> {total}
       </h2>
       <div className="exp-container">
         <h2>
-          Expenses <br /> $300
+          Expenses <br /> {expItem}
         </h2>
         <h2>
           Income <br />
-          200
+          {incomeItem}
         </h2>
       </div>
       <h2>History</h2>
@@ -37,8 +47,8 @@ function Child() {
           const { des, amount } = obj;
           return (
             <li key={index}>
-              <span>{amount}</span>
               <span>{des}</span>
+              <span>{amount}</span>
             </li>
           );
         })}
@@ -50,8 +60,8 @@ function Child() {
           Enter Description <br />
           <input
             type="text"
-            value={newAmount}
-            onChange={(ev) => setAmount(ev.target.value)}
+            value={newDes}
+            onChange={(ev) => setDes(ev.target.value)}
             required
           />
         </label>
@@ -60,8 +70,8 @@ function Child() {
           Enter Amount <br />
           <input
             type="number"
-            value={newDes}
-            onChange={(ev) => setDes(ev.target.value)}
+            value={newAmount}
+            onChange={(ev) => setAmount(ev.target.value)}
             required
           />
         </label>
