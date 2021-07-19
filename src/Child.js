@@ -1,7 +1,8 @@
 import react, { useContext, useState } from "react";
 import { TransationContext } from "./transationContext";
 function Child() {
-  const { transations, addTransation } = useContext(TransationContext);
+  const { transations, addTransation, updateTransation, delTransation } =
+    useContext(TransationContext);
   const [newAmount, setAmount] = useState(0);
   const [newDes, setDes] = useState("");
   const [editItne, setEditItem] = useState(true);
@@ -11,18 +12,15 @@ function Child() {
     event.preventDefault();
     if (!newAmount || !newDes) return;
 
-    if (!editItne) {
-      transations.map((item) => {
-        if (item.id === editItemId) {
-          return item;
-        }
-        addTransation({
-          amount: newAmount,
-          des: newDes,
-        });
+    if (editItne === false) {
+      updateTransation({
+        amount: newAmount,
+        des: newDes,
+        id: editItemId,
       });
-      return setAmount(0), setDes(""), setEditItem(false);
+      return setAmount(0), setDes(""), setEditItem(true);
     }
+
     addTransation({
       amount: newAmount,
       des: newDes,
@@ -71,8 +69,13 @@ function Child() {
           return (
             <li key={id}>
               <span>{des}</span>
-              <span>{amount}</span>
-              <span onClick={() => editFun(obj)}>edit</span>
+              <span>${amount}</span>
+              <span className="li-btn" onClick={() => editFun(obj)}>
+                edit
+              </span>
+              <span className="li-btn" onClick={() => delTransation(obj)}>
+                X
+              </span>
             </li>
           );
         })}

@@ -19,8 +19,36 @@ export const TransationProvider = ({ children }) => {
     });
   }
 
+  function updateTransation(obj) {
+    dispatch({
+      type: "UPDATE_ITEM",
+      payload: {
+        amount: obj.amount,
+        des: obj.des,
+        id: obj.id,
+      },
+    });
+  }
+  function delTransation(obj) {
+    dispatch({
+      type: "DEL_ITEM",
+      payload: {
+        amount: obj.amount,
+        des: obj.des,
+        id: obj.id,
+      },
+    });
+  }
+
   return (
-    <TransationContext.Provider value={{ transations: state, addTransation }}>
+    <TransationContext.Provider
+      value={{
+        transations: state,
+        addTransation,
+        updateTransation,
+        delTransation,
+      }}
+    >
       {children}
     </TransationContext.Provider>
   );
