@@ -6,47 +6,41 @@ import {
   Segment,
   Icon,
   Statistic,
+  Modal,
+  Button,
+  Label,
+  Form,
+  Input,
 } from "semantic-ui-react";
-import { EditItemModal } from "./editItemModal";
 import { FormCOmponant } from "./FormComponant";
 import { TransationContext } from "./transationContext";
 
 function Child() {
-  const { transations, addTransation, updateTransation, delTransation } =
+  const { transations, updateTransation, delTransation } =
     useContext(TransationContext);
   const [newAmount, setAmount] = useState(0);
   const [newDes, setDes] = useState("");
-  const [editItne, setEditItem] = useState(true);
-  const [editItemId, setEditItemId] = useState(null);
+  const [editItemId, setEditItemId] = useState();
+  const [editTransationStatus, setStatus] = useState(false);
   const [objItem, setObjItem] = useState({});
 
-  const handleAddition = (event) => {
+  const handleEditedForm = (event) => {
     event.preventDefault();
     if (!newAmount || !newDes) return;
 
-    if (editItne === false) {
-      updateTransation({
-        amount: newAmount,
-        des: newDes,
-        id: editItemId,
-      });
-      return setAmount(0), setDes(""), setEditItem(true);
-    }
-
-    addTransation({
+    updateTransation({
       amount: newAmount,
       des: newDes,
+      id: editItemId,
     });
-    return setAmount(0);
-    setDes("");
-    setEditItem(true);
+    return setAmount(0), setDes(""), setStatus(false);
   };
 
   const editFun = (obj) => {
-    // setEditItem(false);
-    // setAmount(obj.amount);
-    // setDes(obj.des);
-    // setEditItemId(obj.id);
+    setStatus(true);
+    setEditItemId(obj.id);
+    setAmount(obj.amount);
+    setDes(obj.des);
     setObjItem(obj);
   };
 
@@ -61,7 +55,6 @@ function Child() {
 
   return (
     <div className="container">
-      {/* {console.log(incomeItem)} */}
       <h2 className="text-center">Expenses tracker</h2>
       <Statistic color="grey">
         <Statistic.Value>{total}</Statistic.Value>
@@ -123,7 +116,41 @@ function Child() {
       <Divider />
 
       <FormCOmponant objItem={objItem} />
-      <EditItemModal objItem={objItem} />
+
+      {/*<------------------- Create Modal for Edit Item --------------------------->*/}
+      <div>
+        <Modal open={editTransationStatus}>
+          <Modal.Header>Please Edit Trasation</Modal.Header>
+          <Modal.Content>
+            <Form onSubmit={handleEditedForm}>
+              <Form.Input
+                type="text"
+                value={newDes}
+                onChange={(ev) => setDes(ev.target.value)}
+                placeholder="Add Description"
+              />
+              <Input
+                labelPosition="right"
+                type="number"
+                value={newAmount}
+                onChange={(ev) => setAmount(ev.target.value)}
+                placeholder="Amount"
+              >
+                <Label basic>$</Label>
+                <input />
+                <Label>.00</Label>
+              </Input>
+
+              <Button animated="fade">
+                <Button.Content visible>Edit Transation</Button.Content>
+                <Button.Content hidden>
+                  ${newAmount} a transation
+                </Button.Content>
+              </Button>
+            </Form>
+          </Modal.Content>
+        </Modal>
+      </div>
     </div>
   );
 }
